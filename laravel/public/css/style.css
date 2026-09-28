@@ -1,0 +1,98 @@
+:root {
+  /* Diambil langsung dari style.md */
+  --card: #F1F0E5;
+  --ring: #A37764;
+  --input: #BAAB92;
+  --muted: #E4C7B8;
+  --accent: #E4C7B8;
+  --border: #BAAB92;
+  --radius: 0.5rem;
+  --popover: #FFFFFF;
+  --primary: #A37764;
+  --sidebar: #ebd6cb;
+  --font-sans: DM Sans, sans-serif;
+  --secondary: #BAAB92;
+  --background: #F1F0E5;
+  --foreground: #56453F;
+  --destructive: #1f1a17;
+  
+  --card-foreground: #56453F;
+  --primary-foreground: #FFFFFF;
+  --secondary-foreground: #ffffff;
+  --accent-foreground: #56453F;
+
+  /* Override Bootstrap Native Variables */
+  --bs-primary: var(--primary);
+  --bs-secondary: var(--secondary);
+  --bs-body-bg: var(--background);
+  --bs-body-color: var(--foreground);
+  --bs-font-sans-serif: var(--font-sans);
+  --bs-border-color: var(--border);
+}
+
+body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+}
+
+/* Sidebar Custom Styling */
+.sidebar-wrapper {
+    background-color: var(--sidebar);
+    min-height: 100vh;
+    border-right: 1px solid var(--border);
+}
+
+.sidebar-link {
+    color: var(--foreground);
+    padding: 10px 15px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    display: block;
+    margin-bottom: 5px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.sidebar-link:hover, .sidebar-link.active {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+}
+
+/* Card Custom Styling */
+.card-custom {
+    background-color: var(--popover);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--card-foreground);
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+}
+
+.card-title-custom {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Button & Table Custom Overrides */
+.btn-primary-custom {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border: none;
+    border-radius: var(--radius);
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--ring);
+    color: var(--primary-foreground);
+}
+
+.table-custom th {
+    background-color: var(--muted);
+    color: var(--foreground);
+    border-bottom: 2px solid var(--border);
+}
+
+.table-custom td {
+    border-bottom: 1px solid var(--border);
+    background-color: var(--popover);
+}
