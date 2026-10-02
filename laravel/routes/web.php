@@ -27,13 +27,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // ============================
 // 2. Authenticated Routes
 // ============================
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'no-cache'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // A. Role: Admin (Full Access / Manajerial & Sistem)
     Route::middleware(['role:admin'])->group(function () {
-        Route::resource('users', UserController::class)->only(['index', 'store', 'destroy']);
+        Route::resource('users', UserController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('staff', StaffController::class)->only(['index', 'store', 'destroy']);
         Route::resource('services', ServiceController::class);
     });

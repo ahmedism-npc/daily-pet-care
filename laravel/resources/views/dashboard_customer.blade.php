@@ -1,10 +1,7 @@
 @extends('layouts.app')
 @section('content')
-<div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-4 border-bottom" style="border-color: var(--border) !important;">
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom" style="border-color: var(--border) !important;">
     <h1 class="h2" style="color: var(--primary);">🏠 Halo, {{ $customer->nama }} 👋</h1>
-    <form action="{{ route('logout') }}" method="POST">@csrf
-        <button type="submit" class="btn btn-outline-danger">Logout</button>
-    </form>
 </div>
 
 <!-- Kartu Ringkasan -->
