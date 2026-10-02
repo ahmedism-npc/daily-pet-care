@@ -17,22 +17,71 @@
                     <h4 class="px-3 mb-4" style="color: var(--primary); font-weight: bold;">🐾 Pet Care</h4>
                     
                     <div class="px-3 mb-3 text-muted" style="font-size: 0.85rem;">
-                        Login sebagai: <strong style="color: var(--foreground);">{{ ucfirst(Auth::user()->role) }}</strong>
+                        Login sebagai: <strong style="color: var(--foreground); text-transform: uppercase;">{{ Auth::user()->role }}</strong>
                     </div>
 
                     <ul class="nav flex-column px-2">
-                        <li class="nav-item">
-                            <a class="sidebar-link {{ request()->is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">🏠 Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="sidebar-link {{ request()->is('customers*') ? 'active' : '' }}" href="{{ route('customers.index') }}">👥 Data Pelanggan</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="sidebar-link {{ request()->is('services*') ? 'active' : '' }}" href="{{ route('services.index') }}">📋 Katalog Layanan</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="sidebar-link {{ request()->is('transactions*') ? 'active' : '' }}" href="{{ route('transactions.create') }}">💰 Transaksi Kasir</a>
-                        </li>
+                        
+                        <!-- ================================ -->
+                        <!-- A. ROLE: ADMIN                   -->
+                        <!-- ================================ -->
+                        @if(Auth::user()->role === 'admin')
+                            <li class="nav-item">
+                                <a class="sidebar-link {{ request()->is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">📊 Dashboard Utama</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="sidebar-link" href="{{ route('users.index') }}">👥 Manajemen Akun (Users)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="sidebar-link" href="{{ route('staff.index') }}">👨‍⚕️ Manajemen Staf</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="sidebar-link {{ request()->is('services*') ? 'active' : '' }}" href="{{ route('services.index') }}">📋 Master Data Layanan</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="sidebar-link {{ request()->is('customers*') ? 'active' : '' }}" href="{{ route('customers.index') }}">🐾 Data Pelanggan & Hewan</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="sidebar-link {{ request()->is('transactions*') ? 'active' : '' }}" href="{{ route('transactions.history') }}">📈 Laporan Transaksi</a>
+                            </li>
+                        @endif
+
+                        <!-- ================================ -->
+                        <!-- B. ROLE: KASIR                   -->
+                        <!-- ================================ -->
+                        @if(Auth::user()->role === 'kasir')
+                            <li class="nav-item">
+                                <a class="sidebar-link {{ request()->is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">📊 Dashboard Kasir</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="sidebar-link {{ request()->is('transactions/create') ? 'active' : '' }}" href="{{ route('transactions.create') }}">💰 Transaksi Baru (POS)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="sidebar-link" href="{{ route('transactions.history') }}">🧾 Daftar Transaksi</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="sidebar-link {{ request()->is('customers*') ? 'active' : '' }}" href="{{ route('customers.index') }}">👥 Registrasi Pelanggan</a>
+                            </li>
+                        @endif
+
+                        <!-- ================================ -->
+                        <!-- C. ROLE: CUSTOMER                -->
+                        <!-- ================================ -->
+                        @if(Auth::user()->role === 'customer')
+                            <li class="nav-item">
+                                <a class="sidebar-link {{ request()->is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">🏠 Portal Customer</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="sidebar-link" href="{{ route('my-pets.index') }}">🐕 Hewan Peliharaan Saya</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="sidebar-link" href="{{ route('my-transactions.index') }}">🧾 Riwayat Perawatan</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="sidebar-link" href="{{ route('profile.index') }}">⚙️ Profil Akun</a>
+                            </li>
+                        @endif
+
                     </ul>
                 </div>
             </nav>

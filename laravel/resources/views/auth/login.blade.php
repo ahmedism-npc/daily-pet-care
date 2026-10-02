@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Daily Pet Care</title>
-    <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts for DM Sans -->
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
         .login-wrapper {
@@ -43,7 +40,6 @@
                 <p class="text-muted" style="color: var(--muted-foreground) !important;">Silakan masuk ke akun Anda</p>
             </div>
             
-            <!-- Tambahkan pesan error jika login gagal -->
             @if($errors->any())
                 <div class="alert alert-danger" style="font-size: 0.9rem; border-radius: var(--radius);">
                     {{ $errors->first() }}
@@ -56,9 +52,14 @@
                     <label for="email" class="form-label" style="color: var(--foreground); font-weight: 500;">Email</label>
                     <input type="email" class="form-control form-control-custom" name="email" id="email" placeholder="nama@email.com" value="{{ old('email') }}" required autofocus>
                 </div>
+                
                 <div class="mb-3">
                     <label for="password" class="form-label" style="color: var(--foreground); font-weight: 500;">Password</label>
-                    <input type="password" class="form-control form-control-custom" name="password" id="password" placeholder="••••••••" required>
+                    <!-- Tambahan Fitur Show Password -->
+                    <div class="input-group">
+                        <input type="password" class="form-control form-control-custom" name="password" id="password" placeholder="••••••••" required>
+                        <button class="btn btn-outline-secondary" type="button" id="togglePassword" style="border-color: var(--border);">Lihat</button>
+                    </div>
                 </div>
                 
                 <div class="mb-4 d-flex justify-content-between align-items-center">
@@ -73,5 +74,15 @@
             </form>
         </div>
     </div>
+
+    <!-- Script Show/Hide Password -->
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? 'Tutup' : 'Lihat';
+        });
+    </script>
 </body>
 </html>
