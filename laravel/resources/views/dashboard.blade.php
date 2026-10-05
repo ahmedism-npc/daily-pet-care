@@ -116,39 +116,48 @@
 <script>
 Chart.defaults.font.family = "'DM Sans', sans-serif";
 Chart.defaults.font.size = 11;
-Chart.defaults.color = "#78695F";
+Chart.defaults.color = "#9CA3AF";
 
-const palette = ['#A37764','#C4A491','#DFC3B4','#7A5344','#B8876E','#E8C4A8','#614030'];
+const palette = ['#FFB01F', '#FFC14D', '#FFD27A', '#E59D1B', '#CC8D18', '#FFE4A8', '#B27B15'];
 
 // Line Chart
 const revCtx = document.getElementById('revenueChart').getContext('2d');
 const gradient = revCtx.createLinearGradient(0, 0, 0, 240);
-gradient.addColorStop(0, 'rgba(163, 119, 100, 0.18)');
-gradient.addColorStop(1, 'rgba(163, 119, 100, 0)');
+gradient.addColorStop(0, 'rgba(255, 176, 31, 0.25)');
+gradient.addColorStop(1, 'rgba(255, 176, 31, 0)');
+
+const chartTotals = {!! $chartTotals !!}.map(Number);
 
 new Chart(revCtx, {
     type: 'line',
     data: {
         labels: {!! $chartDates !!},
         datasets: [{
-            data: {!! $chartTotals !!},
-            borderColor: '#A37764',
+            data: chartTotals,
+            borderColor: '#FFB01F',
             backgroundColor: gradient,
             borderWidth: 2,
             pointRadius: 0,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: '#A37764',
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: '#FFB01F',
             fill: true,
             tension: 0.4
         }]
     },
     options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: {
-            callbacks: { label: ctx => ' Rp ' + (ctx.parsed.y/1000).toFixed(1) + 'k' }
-        }},
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
+        plugins: { 
+            legend: { display: false }, 
+            tooltip: {
+                callbacks: { label: ctx => ' Rp ' + (ctx.parsed.y).toLocaleString('id-ID') }
+            }
+        },
         scales: {
-            y: { beginAtZero: true, grid: { color: '#f0ece8', borderDash: [3,3] },
+            y: { beginAtZero: true, grid: { color: 'rgba(156, 163, 175, 0.1)', borderDash: [3,3] },
                  ticks: { callback: v => 'Rp'+(v/1000)+'k', maxTicksLimit: 5 } },
             x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }
         }
@@ -157,7 +166,7 @@ new Chart(revCtx, {
 
 // Doughnut Chart
 const labels = {!! $pieLabels !!};
-const pieData = {!! $pieData !!};
+const pieData = {!! $pieData !!}.map(Number);
 const pieCtx = document.getElementById('topServicesChart').getContext('2d');
 new Chart(pieCtx, {
     type: 'doughnut',
@@ -168,19 +177,25 @@ new Chart(pieCtx, {
     options: {
         responsive: true, maintainAspectRatio: false,
         cutout: '68%',
-        plugins: { legend: { display: false } }
+        plugins: { 
+            legend: { display: false },
+            tooltip: {
+                callbacks: { label: ctx => ' ' + ctx.parsed + ' pesanan' }
+            }
+        }
     }
 });
 
 // Custom Legend
 const legend = document.getElementById('pieLegend');
+legend.innerHTML = ''; // bersihkan legend sebelumnya
 const total = pieData.reduce((a,b) => a+b, 0);
 labels.forEach((l, i) => {
     const pct = total > 0 ? Math.round(pieData[i]/total*100) : 0;
     legend.innerHTML += `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
         <div style="display:flex;align-items:center;gap:8px;">
-            <div style="width:8px;height:8px;border-radius:50%;background:${palette[i]};flex-shrink:0;"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:${palette[i % palette.length]};flex-shrink:0;"></div>
             <span style="font-size:0.75rem;color:var(--foreground-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;">${l}</span>
         </div>
         <span style="font-size:0.75rem;font-weight:600;">${pct}%</span>

@@ -8,14 +8,14 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::orderBy('role')->get();
+        $users = User::orderBy('role')->paginate(10);
         return view('admin.users.index', compact('users'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6',
             'role' => 'required|in:admin,kasir,customer',
@@ -34,7 +34,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $rules = [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'role' => 'required|in:admin,kasir,customer',
         ];

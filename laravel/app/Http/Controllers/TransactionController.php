@@ -63,7 +63,7 @@ class TransactionController extends Controller
     public function history()
     {
         $transactions = Transaction::with(['customer', 'staff', 'details.pet', 'details.service'])
-            ->latest()->get();
+            ->latest()->paginate(10);
         return view('transactions.history', compact('transactions'));
     }
 

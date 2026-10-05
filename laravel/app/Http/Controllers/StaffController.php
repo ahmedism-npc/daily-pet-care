@@ -7,14 +7,14 @@ class StaffController extends Controller
 {
     public function index()
     {
-        $staff = Staff::latest()->get();
+        $staff = Staff::latest()->paginate(10);
         return view('admin.staff.index', compact('staff'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nama_staff' => 'required|string|max:255',
+            'nama_staff' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'peran' => 'required|string|max:255',
         ]);
 

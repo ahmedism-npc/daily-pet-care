@@ -1,26 +1,49 @@
 :root {
-  /* Color Palette dari style.md */
+  /* Color Palette (Light Mode) */
   --card: #FFFFFF;
-  --ring: #A37764;
-  --input: #BAAB92;
-  --muted: #F3EDE8;
-  --accent: #F3EDE8;
-  --border: #E8DDD7;
+  --ring: #FFB01F;
+  --input: #E5E7EB;
+  --muted: #FFF8EB;
+  --accent: #FFF8EB;
+  --border: #E5E7EB;
   --radius: 0.625rem;
   --popover: #FFFFFF;
-  --primary: #A37764;
+  --primary: #FFB01F;
+  --primary-hover: #E59D1B;
   --sidebar: #FAFAF8;
-  --sidebar-active: #F3EDE8;
+  --sidebar-active: #FFF8EB;
   --font-sans: 'DM Sans', sans-serif;
-  --secondary: #BAAB92;
-  --background: #F8F6F2;
-  --foreground: #2D2117;
-  --foreground-muted: #78695F;
-  --destructive: #DC2626;
+  --secondary: #F3F4F6;
+  --background: #F9FAFB;
+  --foreground: #1F2937;
+  --foreground-muted: #6B7280;
+  --destructive: #EF4444;
 
-  --card-foreground: #2D2117;
+  --card-foreground: #1F2937;
   --primary-foreground: #FFFFFF;
-  --secondary-foreground: #56453F;
+  --secondary-foreground: #1F2937;
+}
+
+[data-theme="dark"] {
+  --card: #1F2937;
+  --ring: #FFB01F;
+  --input: #374151;
+  --muted: #374151;
+  --accent: #374151;
+  --border: #374151;
+  --popover: #1F2937;
+  --primary: #FFB01F;
+  --primary-hover: #E59D1B;
+  --sidebar: #111827;
+  --sidebar-active: #374151;
+  --secondary: #374151;
+  --background: #111827;
+  --foreground: #F9FAFB;
+  --foreground-muted: #9CA3AF;
+  
+  --card-foreground: #F9FAFB;
+  --primary-foreground: #111827;
+  --secondary-foreground: #F9FAFB;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -32,6 +55,7 @@ body {
     font-size: 14px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ========================
@@ -43,6 +67,7 @@ body {
     border-right: 1px solid var(--border);
     width: 220px;
     flex-shrink: 0;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .sidebar-section-label {
@@ -90,10 +115,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 52px;
+    height: 56px;
     position: sticky;
     top: 0;
     z-index: 100;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* ========================
@@ -104,7 +130,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 20px;
-    transition: box-shadow 0.2s;
+    transition: box-shadow 0.2s, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .stat-card:hover {
@@ -133,7 +159,7 @@ body {
     margin-top: 6px;
 }
 
-.trend-up { color: #16a34a; }
+.trend-up { color: #10B981; }
 .trend-neutral { color: var(--foreground-muted); }
 
 /* ========================
@@ -144,6 +170,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 10px;
     color: var(--card-foreground);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .card-title-custom {
@@ -165,7 +192,7 @@ body {
 }
 
 .btn-primary-custom:hover {
-    background-color: #8f6352;
+    background-color: var(--primary-hover);
     color: var(--primary-foreground);
     transform: translateY(-1px);
 }
@@ -174,7 +201,7 @@ body {
    TABLES
 ======================== */
 .table-custom th {
-    background-color: var(--muted);
+    background-color: var(--sidebar);
     color: var(--foreground);
     font-size: 0.75rem;
     font-weight: 700;
@@ -187,13 +214,14 @@ body {
 .table-custom td {
     border-bottom: 1px solid var(--border);
     background-color: var(--card);
+    color: var(--foreground);
     padding: 12px 16px;
     font-size: 0.875rem;
     vertical-align: middle;
 }
 
 .table-custom tbody tr:last-child td { border-bottom: none; }
-.table-custom tbody tr:hover td { background-color: #fdfcfa; }
+.table-custom tbody tr:hover td { background-color: var(--sidebar-active); }
 
 /* ========================
    FORM CONTROLS
@@ -201,20 +229,53 @@ body {
 .form-control, .form-select {
     font-size: 0.875rem;
     border-radius: 7px;
-    border-color: var(--border);
-    background-color: var(--card);
+    border: 1px solid var(--border);
+    background-color: var(--background);
     color: var(--foreground);
     padding: 8px 12px;
 }
 
 .form-control:focus, .form-select:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(163, 119, 100, 0.12);
+    box-shadow: 0 0 0 3px rgba(255, 176, 31, 0.2);
+    background-color: var(--card);
+    color: var(--foreground);
 }
+
+/* Dark mode overrides for modal and forms */
+[data-theme="dark"] .form-control, [data-theme="dark"] .form-select {
+    background-color: var(--input);
+}
+[data-theme="dark"] .modal-content {
+    background-color: var(--card);
+    border-color: var(--border);
+}
+[data-theme="dark"] .modal-header, [data-theme="dark"] .modal-footer {
+    border-color: var(--border);
+}
+[data-theme="dark"] .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+[data-theme="dark"] .text-muted {
+    color: var(--foreground-muted) !important;
+}
+
+/* Pagination Custom */
+.pagination { margin-bottom: 0; }
+.page-link { color: var(--foreground); background-color: var(--card); border-color: var(--border); }
+.page-item.active .page-link { background-color: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
+.page-link:hover { background-color: var(--sidebar-active); color: var(--foreground); }
+[data-theme="dark"] .page-link { background-color: var(--card); border-color: var(--border); color: var(--foreground); }
+[data-theme="dark"] .page-item.disabled .page-link { background-color: var(--background); color: var(--foreground-muted); }
 
 /* ========================
    BADGE
 ======================== */
-.badge-role-admin   { background: #fef3c7; color: #92400e; }
-.badge-role-kasir   { background: #dbeafe; color: #1e40af; }
-.badge-role-customer{ background: #dcfce7; color: #166534; }
+.badge-role-admin   { background: #FEF3C7; color: #92400E; padding:4px 8px; border-radius:4px; font-weight:600; font-size:0.75rem;}
+.badge-role-kasir   { background: #DBEAFE; color: #1E40AF; padding:4px 8px; border-radius:4px; font-weight:600; font-size:0.75rem;}
+.badge-role-customer{ background: #DCFCE7; color: #166534; padding:4px 8px; border-radius:4px; font-weight:600; font-size:0.75rem;}
+
+/* Darkmode Badges */
+[data-theme="dark"] .badge-role-admin { background: rgba(245, 158, 11, 0.2); color: #FCD34D; }
+[data-theme="dark"] .badge-role-kasir { background: rgba(59, 130, 246, 0.2); color: #93C5FD; }
+[data-theme="dark"] .badge-role-customer { background: rgba(16, 185, 129, 0.2); color: #6EE7B7; }

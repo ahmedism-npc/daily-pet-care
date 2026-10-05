@@ -3,7 +3,19 @@
 <h2 class="mb-4" style="color:var(--primary); font-weight:bold;">👥 Manajemen Akun Pengguna</h2>
 <div class="row">
     <div class="col-md-4">
-        <div class="card card-custom p-3 mb-4 border-0 shadow-sm">
+        
+    <form method="GET" class="d-flex gap-2 mb-3">
+        <input type="text" name="search" class="form-control" placeholder="Cari user..." value="{{ request('search') }}" style="max-width:300px;">
+        <select name="sort" class="form-select" style="width:150px;">
+            <option value="">Urutkan...</option>
+            <option value="name" {{ request("sort") == "name" ? "selected" : "" }}>Nama</option><option value="email" {{ request("sort") == "email" ? "selected" : "" }}>Email</option>
+        </select>
+        <button type="submit" class="btn btn-primary-custom">Filter</button>
+        @if(request('search') || request('sort'))
+            <a href="?" class="btn btn-light">Reset</a>
+        @endif
+    </form>
+    <div class="card card-custom p-3 mb-4 border-0 shadow-sm">
             <h5 class="mb-3">Tambah Akun Baru</h5>
             <form action="{{ route('users.store') }}" method="POST">@csrf
                 <div class="mb-3"><label class="form-label">Nama</label><input type="text" name="name" class="form-control" required style="border-color:var(--border);"></div>
@@ -21,7 +33,19 @@
         </div>
     </div>
     <div class="col-md-8">
-        <div class="card card-custom p-3 border-0 shadow-sm">
+        
+    <form method="GET" class="d-flex gap-2 mb-3">
+        <input type="text" name="search" class="form-control" placeholder="Cari user..." value="{{ request('search') }}" style="max-width:300px;">
+        <select name="sort" class="form-select" style="width:150px;">
+            <option value="">Urutkan...</option>
+            <option value="name" {{ request("sort") == "name" ? "selected" : "" }}>Nama</option><option value="email" {{ request("sort") == "email" ? "selected" : "" }}>Email</option>
+        </select>
+        <button type="submit" class="btn btn-primary-custom">Filter</button>
+        @if(request('search') || request('sort'))
+            <a href="?" class="btn btn-light">Reset</a>
+        @endif
+    </form>
+    <div class="card card-custom p-3 border-0 shadow-sm">
             <table class="table table-custom align-middle">
                 <thead><tr><th>ID</th><th>Nama</th><th>Email</th><th>Role</th><th>Aksi</th></tr></thead>
                 <tbody>
@@ -86,7 +110,7 @@
                 </div>
                 @endforeach
                 </tbody>
-            </table>
+            </table><div class='mt-3 px-3'>{{ $users->links('pagination::bootstrap-5') }}</div>
         </div>
     </div>
 </div>

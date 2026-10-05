@@ -9,6 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script>
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+    </script>
 </head>
 <body>
 <div style="display:flex; min-height:100vh;">
@@ -112,16 +116,22 @@
             <div style="font-size:0.85rem; color:var(--foreground-muted);">
                 Selamat datang, <strong style="color:var(--foreground);">{{ Auth::user()->name }}</strong>
             </div>
-            <form action="{{ route('logout') }}" method="POST" class="m-0">
-                @csrf
-                <button type="submit" class="btn btn-sm d-flex align-items-center gap-2"
-                        style="border:1px solid var(--border); border-radius:7px; color:var(--foreground-muted); background:transparent; font-size:0.8rem; padding:5px 12px;">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
-                    Log Out
+            <div class="d-flex align-items-center gap-3">
+                <button id="themeToggle" class="btn btn-sm d-flex align-items-center justify-content-center" style="width:32px; height:32px; border:1px solid var(--border); border-radius:7px; color:var(--foreground-muted); background:transparent;">
+                    <svg id="moonIcon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    <svg id="sunIcon" style="display:none;" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                 </button>
-            </form>
+                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                    @csrf
+                    <button type="submit" class="btn btn-sm d-flex align-items-center gap-2"
+                            style="border:1px solid var(--border); border-radius:7px; color:var(--foreground-muted); background:transparent; font-size:0.8rem; padding:5px 12px;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        Log Out
+                    </button>
+                </form>
+            </div>
         </header>
 
         {{-- Content --}}
@@ -140,6 +150,30 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleBtn = document.getElementById('themeToggle');
+        if(!toggleBtn) return;
+        const moon = document.getElementById('moonIcon');
+        const sun = document.getElementById('sunIcon');
+        
+        function updateIcon(theme) {
+            if(theme === 'dark') { moon.style.display = 'none'; sun.style.display = 'block'; }
+            else { moon.style.display = 'block'; sun.style.display = 'none'; }
+        }
+        updateIcon(document.documentElement.getAttribute('data-theme'));
+
+        toggleBtn.addEventListener('click', () => {
+            let current = document.documentElement.getAttribute('data-theme');
+            let next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateIcon(next);
+            // Dispatch event for charts to re-render colors if needed
+            window.dispatchEvent(new Event('themeChanged'));
+        });
+    });
+</script>
 @yield('scripts')
 </body>
 </html>

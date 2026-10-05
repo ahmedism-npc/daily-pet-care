@@ -141,7 +141,9 @@
 let rowIdx = 1;
 let addPetModal;
 // Menyimpan semua data hewan yang telah di-load, dikelompokkan per customer_id
-const allPets = @json($pets->map(fn($p) => ['id'=>$p->id,'nama'=>$p->nama_hewan,'spesies'=>$p->spesies,'customer_id'=>$p->customer_id]));
+const allPets = {!! json_encode($pets->map(function($p) {
+    return ['id' => $p->id, 'nama' => $p->nama_hewan, 'spesies' => $p->spesies, 'customer_id' => $p->customer_id];
+})->values()->all()) !!};
 
 document.addEventListener('DOMContentLoaded', function () {
     addPetModal = new bootstrap.Modal(document.getElementById('addPetModal'));

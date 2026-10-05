@@ -7,7 +7,7 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $services = Service::latest()->get();
+        $services = Service::latest()->paginate(10);
         return view('services.index', compact('services'));
     }
 
@@ -20,5 +20,11 @@ class ServiceController extends Controller
 
         Service::create($data);
         return back()->with('success', 'Layanan baru berhasil ditambahkan!');
+    }
+
+    public function destroy(\App\Models\Service $service)
+    {
+        $service->delete();
+        return back()->with('success', 'Data layanan berhasil dihapus!');
     }
 }
