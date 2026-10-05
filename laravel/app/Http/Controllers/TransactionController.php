@@ -1,21 +1,16 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Transaction;
-use App\Models\TransactionDetail;
-use App\Models\Customer;
-use App\Models\Pet;
-use App\Models\Service;
-use App\Models\Staff;
+use App\Models\{Transaction, TransactionDetail, Customer, Pet, Service, Staff};
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
     public function create()
     {
-        $customers = Customer::all();
-        $pets = Pet::all();
-        $services = Service::all();
-        $staff = Staff::all();
+        $customers = Customer::orderBy('nama')->get();
+        $pets      = Pet::with('customer')->get();
+        $services  = Service::orderBy('nama_layanan')->get();
+        $staff     = Staff::orderBy('nama_staff')->get();
         return view('transactions.create', compact('customers', 'pets', 'services', 'staff'));
     }
 
@@ -23,32 +18,37 @@ class TransactionController extends Controller
     {
         $request->validate([
             'customer_id' => 'required|exists:customers,id',
-            'pet_id' => 'required|exists:pets,id',
-            'staff_id' => 'required|exists:staff,id',
-            'services' => 'required|array|min:1',
-            'services.*.id' => 'required|exists:services,id',
-            'services.*.jumlah' => 'required|integer|min:1',
+            'staff_id'    => 'required|exists:staff,id',
+            'items'       => 'required|array|min:1',
+            'items.*.pet_id'     => 'required|exists:pets,id',
+            'items.*.service_id' => 'required|exists:services,id',
+            'items.*.jumlah'     => 'required|integer|min:1',
         ]);
 
         $totalHarga = 0;
         $detailData = [];
 
-        foreach ($request->services as $item) {
-            $service = Service::find($item['id']);
+        foreach ($request->items as $item) {
+            $service  = Service::find($item['service_id']);
             $subtotal = $service->harga * $item['jumlah'];
             $totalHarga += $subtotal;
+
             $detailData[] = [
+                'pet_id'     => $item['pet_id'],
                 'service_id' => $service->id,
-                'jumlah' => $item['jumlah'],
-                'subtotal' => $subtotal,
+                'jumlah'     => $item['jumlah'],
+                'subtotal'   => $subtotal,
             ];
         }
 
+        // Simpan pet_id pertama ke transactions.pet_id (backward-compat)
+        $firstPetId = $detailData[0]['pet_id'];
+
         $trx = Transaction::create([
             'customer_id' => $request->customer_id,
-            'pet_id' => $request->pet_id,
-            'staff_id' => $request->staff_id,
-            'tanggal' => date('Y-m-d'),
+            'pet_id'      => $firstPetId,
+            'staff_id'    => $request->staff_id,
+            'tanggal'     => date('Y-m-d'),
             'total_harga' => $totalHarga,
         ]);
 
@@ -56,22 +56,20 @@ class TransactionController extends Controller
             TransactionDetail::create(array_merge($detail, ['transaction_id' => $trx->id]));
         }
 
-        return redirect()->route('dashboard')->with('success', "Transaksi TRX-00{$trx->id} berhasil disimpan! Total: Rp " . number_format($totalHarga, 0, ',', '.'));
+        return redirect()->route('transactions.history')
+            ->with('success', "Transaksi TRX-00{$trx->id} berhasil! Total: Rp " . number_format($totalHarga, 0, ',', '.'));
     }
 
-    // Riwayat seluruh transaksi (Admin & Kasir)
     public function history()
     {
-        $transactions = Transaction::with(['customer', 'pet', 'staff', 'details.service'])
-            ->latest()
-            ->get();
+        $transactions = Transaction::with(['customer', 'staff', 'details.pet', 'details.service'])
+            ->latest()->get();
         return view('transactions.history', compact('transactions'));
     }
 
-    // Detail per transaksi
     public function show(Transaction $transaction)
     {
-        $transaction->load(['customer', 'pet', 'staff', 'details.service']);
+        $transaction->load(['customer', 'staff', 'details.pet', 'details.service']);
         return view('transactions.show', compact('transaction'));
     }
 }

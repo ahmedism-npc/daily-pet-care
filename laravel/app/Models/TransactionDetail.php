@@ -8,4 +8,5 @@ class TransactionDetail extends Model
 
     public function transaction() { return $this->belongsTo(Transaction::class); }
     public function service()     { return $this->belongsTo(Service::class); }
+    public function pet()         { return $this->belongsTo(Pet::class); }
 }

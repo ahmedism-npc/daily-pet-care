@@ -1,98 +1,220 @@
 :root {
-  /* Diambil langsung dari style.md */
-  --card: #F1F0E5;
+  /* Color Palette dari style.md */
+  --card: #FFFFFF;
   --ring: #A37764;
   --input: #BAAB92;
-  --muted: #E4C7B8;
-  --accent: #E4C7B8;
-  --border: #BAAB92;
-  --radius: 0.5rem;
+  --muted: #F3EDE8;
+  --accent: #F3EDE8;
+  --border: #E8DDD7;
+  --radius: 0.625rem;
   --popover: #FFFFFF;
   --primary: #A37764;
-  --sidebar: #ebd6cb;
-  --font-sans: DM Sans, sans-serif;
+  --sidebar: #FAFAF8;
+  --sidebar-active: #F3EDE8;
+  --font-sans: 'DM Sans', sans-serif;
   --secondary: #BAAB92;
-  --background: #F1F0E5;
-  --foreground: #56453F;
-  --destructive: #1f1a17;
-  
-  --card-foreground: #56453F;
-  --primary-foreground: #FFFFFF;
-  --secondary-foreground: #ffffff;
-  --accent-foreground: #56453F;
+  --background: #F8F6F2;
+  --foreground: #2D2117;
+  --foreground-muted: #78695F;
+  --destructive: #DC2626;
 
-  /* Override Bootstrap Native Variables */
-  --bs-primary: var(--primary);
-  --bs-secondary: var(--secondary);
-  --bs-body-bg: var(--background);
-  --bs-body-color: var(--foreground);
-  --bs-font-sans-serif: var(--font-sans);
-  --bs-border-color: var(--border);
+  --card-foreground: #2D2117;
+  --primary-foreground: #FFFFFF;
+  --secondary-foreground: #56453F;
 }
+
+*, *::before, *::after { box-sizing: border-box; }
 
 body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Sidebar Custom Styling */
+/* ========================
+   SIDEBAR
+======================== */
 .sidebar-wrapper {
     background-color: var(--sidebar);
     min-height: 100vh;
     border-right: 1px solid var(--border);
+    width: 220px;
+    flex-shrink: 0;
+}
+
+.sidebar-section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--foreground-muted);
+    padding: 0 12px;
+    margin: 16px 0 6px;
 }
 
 .sidebar-link {
-    color: var(--foreground);
-    padding: 10px 15px;
-    border-radius: var(--radius);
+    color: var(--foreground-muted);
+    padding: 7px 12px;
+    border-radius: 6px;
     text-decoration: none;
-    display: block;
-    margin-bottom: 5px;
-    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 1px 8px;
+    font-size: 0.875rem;
     font-weight: 500;
+    transition: background 0.15s, color 0.15s;
 }
 
-.sidebar-link:hover, .sidebar-link.active {
-    background-color: var(--accent);
-    color: var(--accent-foreground);
+.sidebar-link:hover {
+    background-color: var(--sidebar-active);
+    color: var(--foreground);
 }
 
-/* Card Custom Styling */
-.card-custom {
-    background-color: var(--popover);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--card-foreground);
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
-}
-
-.card-title-custom {
+.sidebar-link.active {
+    background-color: var(--sidebar-active);
     color: var(--primary);
     font-weight: 600;
 }
 
-/* Button & Table Custom Overrides */
+/* ========================
+   TOP NAVBAR
+======================== */
+.top-navbar {
+    background-color: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 52px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* ========================
+   STAT CARDS
+======================== */
+.stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    transition: box-shadow 0.2s;
+}
+
+.stat-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.stat-card .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--foreground-muted);
+    margin-bottom: 6px;
+}
+
+.stat-card .value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--foreground);
+    line-height: 1.2;
+}
+
+.stat-card .trend {
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+.trend-up { color: #16a34a; }
+.trend-neutral { color: var(--foreground-muted); }
+
+/* ========================
+   CARD GENERIC
+======================== */
+.card-custom {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--card-foreground);
+}
+
+.card-title-custom {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* ========================
+   BUTTONS
+======================== */
 .btn-primary-custom {
     background-color: var(--primary);
     color: var(--primary-foreground);
     border: none;
-    border-radius: var(--radius);
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: background 0.15s, transform 0.1s;
 }
 
 .btn-primary-custom:hover {
-    background-color: var(--ring);
+    background-color: #8f6352;
     color: var(--primary-foreground);
+    transform: translateY(-1px);
 }
 
+/* ========================
+   TABLES
+======================== */
 .table-custom th {
     background-color: var(--muted);
     color: var(--foreground);
-    border-bottom: 2px solid var(--border);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
 }
 
 .table-custom td {
     border-bottom: 1px solid var(--border);
-    background-color: var(--popover);
+    background-color: var(--card);
+    padding: 12px 16px;
+    font-size: 0.875rem;
+    vertical-align: middle;
 }
+
+.table-custom tbody tr:last-child td { border-bottom: none; }
+.table-custom tbody tr:hover td { background-color: #fdfcfa; }
+
+/* ========================
+   FORM CONTROLS
+======================== */
+.form-control, .form-select {
+    font-size: 0.875rem;
+    border-radius: 7px;
+    border-color: var(--border);
+    background-color: var(--card);
+    color: var(--foreground);
+    padding: 8px 12px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(163, 119, 100, 0.12);
+}
+
+/* ========================
+   BADGE
+======================== */
+.badge-role-admin   { background: #fef3c7; color: #92400e; }
+.badge-role-kasir   { background: #dbeafe; color: #1e40af; }
+.badge-role-customer{ background: #dcfce7; color: #166534; }

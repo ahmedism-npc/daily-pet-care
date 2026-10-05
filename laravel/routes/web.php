@@ -15,7 +15,20 @@ use App\Http\Controllers\ProfileController;
 // ============================
 Route::get('/', function () {
     $services = \App\Models\Service::all();
-    return view('welcome', compact('services'));
+
+    // Ambil top 3 layanan paling banyak dipesan bulan ini untuk ditampilkan sebagai rekomendasi
+    $trendingServices = \Illuminate\Support\Facades\DB::table('transaction_details')
+        ->join('services', 'transaction_details.service_id', '=', 'services.id')
+        ->join('transactions', 'transaction_details.transaction_id', '=', 'transactions.id')
+        ->whereMonth('transactions.tanggal', now()->month)
+        ->whereYear('transactions.tanggal', now()->year)
+        ->select('services.id', 'services.nama_layanan', 'services.harga', \Illuminate\Support\Facades\DB::raw('SUM(transaction_details.jumlah) as total_used'))
+        ->groupBy('services.id', 'services.nama_layanan', 'services.harga')
+        ->orderByDesc('total_used')
+        ->limit(3)
+        ->get();
+
+    return view('welcome', compact('services', 'trendingServices'));
 })->name('home');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
