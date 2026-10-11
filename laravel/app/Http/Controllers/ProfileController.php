@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Models\Customer;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'kontak' => 'required|string|max:20',
             'alamat' => 'nullable|string',
         ]);
@@ -28,6 +29,13 @@ class ProfileController extends Controller
         $customer = Customer::where('user_id', $user->id)->first();
         if ($customer) {
             $customer->update([
+                'nama' => $request->name,
+                'kontak' => $request->kontak,
+                'alamat' => $request->alamat,
+            ]);
+        } else {
+            Customer::create([
+                'user_id' => $user->id,
                 'nama' => $request->name,
                 'kontak' => $request->kontak,
                 'alamat' => $request->alamat,

@@ -1,14 +1,33 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::orderBy('role')->paginate(10);
+        $query = User::query();
+
+        if ($search = $request->input('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($sort = $request->input('sort')) {
+            if (in_array($sort, ['name', 'email', 'role', 'id'])) {
+                $query->orderBy($sort, $request->input('order', 'asc'));
+            }
+        } else {
+            $query->orderBy('role');
+        }
+
+        $users = $query->paginate(10)->withQueryString();
         return view('admin.users.index', compact('users'));
     }
 
@@ -21,12 +40,22 @@ class UserController extends Controller
             'role' => 'required|in:admin,kasir,customer',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
+
+        // Jika role customer dibuat oleh Admin, otomatis buatkan Customer record agar akun tertaut
+        if ($user->role === 'customer') {
+            Customer::create([
+                'user_id' => $user->id,
+                'nama' => $user->name,
+                'kontak' => '-',
+                'alamat' => '-',
+            ]);
+        }
 
         return back()->with('success', 'Akun pengguna baru berhasil dibuat!');
     }
@@ -54,6 +83,21 @@ class UserController extends Controller
         }
 
         $user->save();
+
+        // Update nama pelanggan jika terhubung
+        if ($user->role === 'customer') {
+            $customer = Customer::where('user_id', $user->id)->first();
+            if ($customer) {
+                $customer->update(['nama' => $user->name]);
+            } else {
+                Customer::create([
+                    'user_id' => $user->id,
+                    'nama' => $user->name,
+                    'kontak' => '-',
+                    'alamat' => '-',
+                ]);
+            }
+        }
 
         return back()->with('success', 'Data akun berhasil diperbarui!');
     }

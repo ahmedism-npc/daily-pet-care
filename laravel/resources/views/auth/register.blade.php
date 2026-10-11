@@ -133,6 +133,11 @@
                     <input type="email" name="email" class="input-clean" placeholder="nama@email.com" value="{{ old('email') }}" required>
                 </div>
 
+                <div style="margin-bottom:12px;">
+                    <label style="font-size:0.85rem; font-weight:600; color:var(--text);">Alamat (Opsional)</label>
+                    <input type="text" name="alamat" class="input-clean" placeholder="Mis. Jl. Melati No. 12" value="{{ old('alamat') }}">
+                </div>
+
                 <div class="form-row">
                     <div class="form-col">
                         <label style="font-size:0.85rem; font-weight:600; color:var(--text);">Password</label>

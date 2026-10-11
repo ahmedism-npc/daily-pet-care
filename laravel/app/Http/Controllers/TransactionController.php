@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Models\{Transaction, TransactionDetail, Customer, Pet, Service, Staff};
 use Illuminate\Http\Request;
 
@@ -56,14 +57,26 @@ class TransactionController extends Controller
             TransactionDetail::create(array_merge($detail, ['transaction_id' => $trx->id]));
         }
 
+        $trxCode = sprintf('TRX-%04d', $trx->id);
         return redirect()->route('transactions.history')
-            ->with('success', "Transaksi TRX-00{$trx->id} berhasil! Total: Rp " . number_format($totalHarga, 0, ',', '.'));
+            ->with('success', "Transaksi {$trxCode} berhasil! Total: Rp " . number_format($totalHarga, 0, ',', '.'));
     }
 
-    public function history()
+    public function history(Request $request)
     {
-        $transactions = Transaction::with(['customer', 'staff', 'details.pet', 'details.service'])
-            ->latest()->paginate(10);
+        $query = Transaction::with(['customer', 'staff', 'details.pet', 'details.service']);
+
+        if ($search = $request->input('search')) {
+            $query->whereHas('customer', function($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%");
+            });
+        }
+
+        if ($date = $request->input('date')) {
+            $query->whereDate('tanggal', $date);
+        }
+
+        $transactions = $query->latest()->paginate(10)->withQueryString();
         return view('transactions.history', compact('transactions'));
     }
 

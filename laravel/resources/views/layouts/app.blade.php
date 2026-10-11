@@ -22,7 +22,9 @@
         {{-- Logo --}}
         <div class="px-4 mb-2 pb-3" style="border-bottom:1px solid var(--border);">
             <a href="{{ route('dashboard') }}" style="text-decoration:none; display:flex; align-items:center; gap:10px;">
-                <div style="width:32px;height:32px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">🐾</div>
+                <div style="width:32px;height:32px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 13.5c-.83 0-1.5-.67-1.5-1.5S9.17 12 10 12s1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-2-4.5c-.83 0-1.5-.67-1.5-1.5S9.17 7 10 7s1.5.67 1.5 1.5S12.83 10 12 10z"/></svg>
+                </div>
                 <div>
                     <div style="font-weight:800;font-size:0.9rem;color:var(--foreground);">Pet Care</div>
                     <div style="font-size:0.7rem;color:var(--foreground-muted);">{{ ucfirst(Auth::user()->role) }}</div>
@@ -55,8 +57,16 @@
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     Data Pelanggan
                 </a>
-                <div class="sidebar-section-label">Laporan</div>
-                <a href="{{ route('transactions.history') }}" class="sidebar-link {{ request()->is('transactions*') ? 'active' : '' }}">
+                <a href="{{ route('pets.index') }}" class="sidebar-link {{ request()->is('pets*') ? 'active' : '' }}">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    Direktori Hewan
+                </a>
+                <div class="sidebar-section-label">Transaksi</div>
+                <a href="{{ route('transactions.create') }}" class="sidebar-link {{ request()->is('transactions/create') ? 'active' : '' }}">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    Transaksi Baru (POS)
+                </a>
+                <a href="{{ route('transactions.history') }}" class="sidebar-link {{ request()->is('transactions*') && !request()->is('transactions/create') ? 'active' : '' }}">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                     Laporan Transaksi
                 </a>
@@ -79,6 +89,10 @@
                 <a href="{{ route('customers.index') }}" class="sidebar-link {{ request()->is('customers*') ? 'active' : '' }}">
                     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                     Registrasi Pelanggan
+                </a>
+                <a href="{{ route('pets.index') }}" class="sidebar-link {{ request()->is('pets*') ? 'active' : '' }}">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    Direktori Hewan
                 </a>
             @endif
 

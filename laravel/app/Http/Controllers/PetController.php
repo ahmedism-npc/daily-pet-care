@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Models\Pet;
 use App\Models\Customer;
 use Illuminate\Http\Request;
@@ -7,11 +8,33 @@ use Illuminate\Support\Facades\Auth;
 
 class PetController extends Controller
 {
-    // Untuk Admin/Kasir: direktori semua hewan
-    public function index()
+    // Untuk Admin/Kasir: direktori semua hewan dengan search, sort, pagination
+    public function index(Request $request)
     {
-        $pets = Pet::with('customer')->latest()->get();
-        return view('pets.index', compact('pets'));
+        $query = Pet::with('customer');
+
+        if ($search = $request->input('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('nama_hewan', 'like', "%{$search}%")
+                  ->orWhere('spesies', 'like', "%{$search}%")
+                  ->orWhereHas('customer', function($cq) use ($search) {
+                      $cq->where('nama', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($sort = $request->input('sort')) {
+            if (in_array($sort, ['nama_hewan', 'spesies', 'id'])) {
+                $query->orderBy($sort, $request->input('order', 'asc'));
+            }
+        } else {
+            $query->latest();
+        }
+
+        $pets = $query->paginate(10)->withQueryString();
+        $customers = Customer::orderBy('nama')->get();
+
+        return view('pets.index', compact('pets', 'customers'));
     }
 
     // Store untuk Admin/Kasir — mendukung AJAX maupun form biasa

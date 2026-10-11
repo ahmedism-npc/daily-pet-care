@@ -47,7 +47,7 @@ Route::middleware(['auth', 'no-cache'])->group(function () {
     // A. Role: Admin (Full Access / Manajerial & Sistem)
     Route::middleware(['role:admin'])->group(function () {
         Route::resource('users', UserController::class)->only(['index', 'store', 'update', 'destroy']);
-        Route::resource('staff', StaffController::class)->only(['index', 'store', 'destroy']);
+        Route::resource('staff', StaffController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::resource('services', ServiceController::class);
     });
 
